@@ -1,0 +1,16 @@
+# --- Frontend (React / Node) ---
+frontend/node_modules/
+frontend/dist/
+frontend/.env.local
+
+# --- Backend (Spring Boot / Maven / Java) ---
+backend/target/
+backend/.gradle/
+backend/build/
+backend/*.iml
+
+# --- IDEs e Sistemas Operacionais ---
+.DS_Store
+.vscode/
+.idea/
+*.log
