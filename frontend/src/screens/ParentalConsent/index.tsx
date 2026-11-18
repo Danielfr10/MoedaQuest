@@ -11,6 +11,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { BackButton } from '@/components/BackButton';
 import { PrimaryButton } from '@/components/PrimaryButton';
 import { TextLink } from '@/components/TextLink';
+import { useTrail } from '@/contexts/TrailContext';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { tokens } from '@/theme/tokens';
 import { styles } from './styles';
@@ -21,7 +22,6 @@ function firstParam(value: string | string[] | undefined) {
 
 const storedItems = [
   'Nome ou apelido da criança',
-  'Nome do mascote',
   'Progresso nas missões',
   'Metas e moedas virtuais',
 ];
@@ -41,6 +41,7 @@ export default function ParentalConsentScreen() {
   const colors = tokens.colors[colorScheme];
   const [authorized, setAuthorized] = useState(false);
   const [validationMessage, setValidationMessage] = useState('');
+  const { setChildName } = useTrail();
 
   function handleConfirm() {
     if (!authorized) {
@@ -49,6 +50,7 @@ export default function ParentalConsentScreen() {
     }
 
     setValidationMessage('');
+    setChildName(name);
     router.push({
       pathname: '/trilha',
       params: { name, age, email },

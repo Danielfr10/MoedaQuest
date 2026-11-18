@@ -2,12 +2,15 @@ import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { AppThemeProvider } from '@/contexts/AppThemeContext';
+import { TrailProvider } from '@/contexts/TrailContext';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 
 export default function RootLayout() {
   return (
     <AppThemeProvider>
-      <RootLayoutContent />
+      <TrailProvider>
+        <RootLayoutContent />
+      </TrailProvider>
     </AppThemeProvider>
   );
 }
