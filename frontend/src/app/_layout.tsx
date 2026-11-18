@@ -1,8 +1,18 @@
 import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
-import { useColorScheme } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { AppThemeProvider } from '@/contexts/AppThemeContext';
+import { useColorScheme } from '@/hooks/use-color-scheme';
+
 export default function RootLayout() {
+  return (
+    <AppThemeProvider>
+      <RootLayoutContent />
+    </AppThemeProvider>
+  );
+}
+
+function RootLayoutContent() {
   const colorScheme = useColorScheme();
 
   return (

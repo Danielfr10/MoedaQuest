@@ -1,7 +1,8 @@
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { StyleSheet, Text, View, useColorScheme } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
 import { BrandHeader } from '@/components/BrandHeader';
+import { useColorScheme } from '@/hooks/use-color-scheme';
 import { tokens } from '@/theme/tokens';
 
 export default function TrilhaRoute() {

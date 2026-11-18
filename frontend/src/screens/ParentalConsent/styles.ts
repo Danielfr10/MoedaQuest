@@ -14,9 +14,9 @@ export const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     paddingHorizontal: 20,
-    paddingTop: 32,
+    paddingTop: 64,
     paddingBottom: tokens.spacing.large,
   },
   screen: {
