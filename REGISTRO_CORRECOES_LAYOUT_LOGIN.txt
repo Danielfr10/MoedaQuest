@@ -1,0 +1,223 @@
+REGISTRO DAS CORRECOES DE LAYOUT E NAVEGACAO DO LOGIN
+MOEDAQUEST - FRONTEND
+Data: 17/11/2026
+
+
+1. OBJETIVO
+===========
+
+Corrigir dois pontos solicitados no frontend:
+
+1. Simplificar src/app/_layout.tsx para que o Stack raiz nao declare rotas
+   antigas de forma fixa.
+2. Garantir que src/screens/Login/index.tsx navegue diretamente para
+   /consentimento apos a validacao local de e-mail e senha.
+
+
+2. ARQUIVO VERIFICADO: src/app/_layout.tsx
+==========================================
+
+Arquivo:
+frontend/src/app/_layout.tsx
+
+Estado antes da correcao:
+- O layout raiz usava um Stack com screenOptions contendo:
+  - headerShown
+  - animation
+  - contentStyle
+- Nao havia Stack.Screen declarando rotas antigas.
+- A configuracao permanecia fixa em configuracoes visuais no layout raiz.
+
+Estado apos a correcao:
+- O layout raiz foi simplificado para:
+
+  <Stack screenOptions={{ headerShown: false }} />
+
+- Foram removidas:
+  - configuracao fixa de animation
+  - configuracao fixa de contentStyle
+- As rotas passaram a ser reconhecidas pelos Route Groups existentes:
+  - (auth)
+  - (responsavel)
+  - (crianca)
+
+Resultado:
+- O Stack raiz nao fixa declaracoes antigas de paginas.
+- Os grupos continuam registrados pelo sistema de arquivos do Expo Router.
+- Os layouts dos grupos permanecem separados por perfil.
+
+
+3. ARQUIVO VERIFICADO: src/screens/Login/index.tsx
+===================================================
+
+Arquivo:
+frontend/src/screens/Login/index.tsx
+
+Validacoes locais mantidas:
+- O e-mail precisa ser valido.
+- A senha nao pode estar vazia.
+
+Erros existentes:
+- "Digite um e-mail válido."
+- "Digite sua senha."
+
+Estado antes da ultima correcao:
+- A validacao local passava.
+- Em vez de navegar, o codigo mostrava uma mensagem de aviso:
+
+  "Os campos foram preenchidos. O login ainda precisa ser conectado a um
+  serviço de autenticação."
+
+Estado apos a correcao:
+- O estado notice foi removido.
+- Nao existe mais mensagem simulada de aviso apos login localmente valido.
+- O campo Text foi removido da importacao porque a mensagem nao esta mais em uso.
+- Ao passar na validacao:
+  - name, age e email sao preparados
+  - router.push navega diretamente para /consentimento
+
+Estrutura final da navegacao:
+
+router.push({
+  pathname: '/consentimento',
+  params: {
+    name,
+    age,
+    email: normalizedEmail,
+  },
+})
+
+O email utilizado foi normalizado com email.trim().
+Os parametros name e age continuam sendo obtidos com useLocalSearchParams.
+
+
+4. COMPORTAMENTO FINAL DO LOGIN
+================================
+
+Caso o e-mail seja invalido:
+- nextErrors.email recebe "Digite um e-mail válido."
+- nao ocorre navegacao.
+
+Caso a senha esteja vazia:
+- nextErrors.password recebe "Digite sua senha."
+- nao ocorre navegacao.
+
+Caso e-mail e senha sejam validos:
+- os erros sao limpos.
+- o e-mail recebe trim.
+- router.push navega para /consentimento.
+- name, age e email sao passados como parametros.
+
+
+5. IMPORTACOES AJUSTADAS
+=========================
+
+Em src/screens/Login/index.tsx foi removida a importacao React Native Text.
+
+Motivo:
+- O componente nao possui mais o notice.
+- A mensagem de aviso de autenticacao simulada foi removida.
+
+O arquivo manteve:
+- KeyboardAvoidingView
+- Platform
+- ScrollView
+- type TextInputInstance
+- useColorScheme
+- View
+
+
+6. ESTADO REMOVIDO
+==================
+
+O estado React notice foi removido:
+
+- const [notice, setNotice]...
+- setNotice('')
+- bloco JSX que renderizava a mensagem
+
+Isso evita manter comportamento de prototipo que informava que autenticacao
+real ainda precisava ser conectada.
+
+
+7. ARQUIVOS CORRIGIDOS
+=======================
+
+- frontend/src/app/_layout.tsx
+- frontend/src/screens/Login/index.tsx
+
+
+8. ARQUIVO NAO ALTERADO
+========================
+
+- frontend/src/screens/ParentalConsent/index.tsx
+- frontend/src/screens/ParentalConsent/styles.ts
+
+O fluxo de consentimento nao precisou ser alterado nesta correcao.
+
+
+9. DIFERENCAS CONFIRMADAS
+=========================
+
+Layout:
+- remocao de animation fixa
+- remocao de contentStyle fixa
+- uso de Stack generico com header oculto
+
+Login:
+- remocao da mensagem de autenticacao simulada
+- remocao do estado notice
+- remocao da renderizacao condicional da mensagem
+- inclusao da navegacao para consentimento apos validacao
+- parametros name, age e email enviados ao destino
+
+
+10. COMANDOS EXECUTADOS
+========================
+
+Typecheck:
+
+cd frontend
+npx tsc --noEmit
+
+Lint:
+
+npx expo lint
+
+
+11. RESULTADOS DOS TESTES
+==========================
+
+Resultado do typecheck:
+- Aprovado
+- Comando: npx tsc --noEmit
+- Erros: zero
+
+Resultado do lint:
+- Aprovado
+- Comando: npx expo lint
+- Problemas: zero
+
+
+12. OBSERVACOES
+================
+
+- O login ainda e uma validacao local.
+- Esta correcao nao implementa autenticacao real.
+- O backend ainda nao esta sendo chamado.
+- A navegacao agora continua para consentimento apos os campos serem validados.
+- O e-mail recebido no consentimento pode ser um e-mail preenchido no login.
+- O name e age continuam dependentes dos parametros recebidos nas rotas anteriores.
+
+
+13. RESULTADO FINAL
+====================
+
+Os dois pontos solicitados foram confirmados e corrigidos:
+
+1. src/app/_layout.tsx usa um Stack raiz simples sem declaracoes antigas fixas.
+2. src/screens/Login/index.tsx navega diretamente para /consentimento
+   apos validar e-mail e senha.
+
+
+FIM DO REGISTRO

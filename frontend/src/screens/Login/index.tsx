@@ -4,9 +4,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  Text,
   type TextInputInstance,
-  useColorScheme,
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -16,6 +14,7 @@ import { BrandHeader } from '@/components/BrandHeader';
 import { FormField } from '@/components/FormField';
 import { PrimaryButton } from '@/components/PrimaryButton';
 import { TextLink } from '@/components/TextLink';
+import { useColorScheme } from '@/hooks/use-color-scheme';
 import { tokens } from '@/theme/tokens';
 import { styles } from './styles';
 
@@ -41,7 +40,6 @@ export default function LoginScreen() {
   const [email, setEmail] = useState(initialEmail);
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState<LoginErrors>({});
-  const [notice, setNotice] = useState('');
   const emailInput = useRef<TextInputInstance>(null);
   const passwordInput = useRef<TextInputInstance>(null);
 
@@ -59,7 +57,6 @@ export default function LoginScreen() {
   }
 
   function handleSubmit() {
-    setNotice('');
     const nextErrors: LoginErrors = {};
 
     if (!isValidEmail(email.trim())) {
@@ -71,9 +68,15 @@ export default function LoginScreen() {
 
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length === 0) {
-      setNotice(
-        'Os campos foram preenchidos. O login ainda precisa ser conectado a um serviço de autenticação.',
-      );
+      const normalizedEmail = email.trim();
+      router.push({
+        pathname: '/consentimento',
+        params: {
+          name,
+          age,
+          email: normalizedEmail,
+        },
+      });
     }
   }
 
@@ -108,7 +111,6 @@ export default function LoginScreen() {
               autoCapitalize="none"
               onChangeText={(value) => {
                 setEmail(value);
-                setNotice('');
                 clearError('email');
               }}
               onSubmitEditing={() => passwordInput.current?.focus()}
@@ -124,7 +126,6 @@ export default function LoginScreen() {
               secureTextEntry
               onChangeText={(value) => {
                 setPassword(value);
-                setNotice('');
                 clearError('password');
               }}
               onSubmitEditing={handleSubmit}
@@ -136,14 +137,6 @@ export default function LoginScreen() {
               onPress={handleSubmit}
               colorScheme={colorScheme}
             />
-            {notice ? (
-              <Text
-                accessibilityLiveRegion="polite"
-                style={[styles.notice, { color: colors.primary }]}
-              >
-                {notice}
-              </Text>
-            ) : null}
             <TextLink
               prefix="Ainda não tem conta?"
               label="Cadastre-se"

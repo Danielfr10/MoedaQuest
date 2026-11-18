@@ -6,7 +6,6 @@ import {
   ScrollView,
   Text,
   type TextInputInstance,
-  useColorScheme,
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -15,6 +14,7 @@ import { BackButton } from '@/components/BackButton';
 import { BrandHeader } from '@/components/BrandHeader';
 import { FormField } from '@/components/FormField';
 import { PrimaryButton } from '@/components/PrimaryButton';
+import { useColorScheme } from '@/hooks/use-color-scheme';
 import { tokens } from '@/theme/tokens';
 import { styles } from './styles';
 
