@@ -15,19 +15,26 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private String nome;
 
-    // Construtor vazio (obrigatório pelo JPA)
+    private Integer idade;
+
+    @Column(unique = true, nullable = false)
+    private String email;
+
+    @Column(nullable = false)
+    private String senha;
+
     public Usuario() {
     }
 
-    // Construtor com o nome para facilitar o cadastro
-    public Usuario(String nome) {
+    public Usuario(String nome, Integer idade, String email, String senha) {
         this.nome = nome;
+        this.idade = idade;
+        this.email = email;
+        this.senha = senha;
     }
 
-    // Getters e Setters
     public Long getId() {
         return id;
     }
@@ -42,5 +49,29 @@ public class Usuario {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public Integer getIdade() {
+        return idade;
+    }
+
+    public void setIdade(Integer idade) {
+        this.idade = idade;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
     }
 }

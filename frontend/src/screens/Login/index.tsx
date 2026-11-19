@@ -56,10 +56,11 @@ export default function LoginScreen() {
     });
   }
 
-  function handleSubmit() {
+  async function handleSubmit() {
     const nextErrors: LoginErrors = {};
+    const normalizedEmail = email.trim();
 
-    if (!isValidEmail(email.trim())) {
+    if (!isValidEmail(normalizedEmail)) {
       nextErrors.email = 'Digite um e-mail válido.';
     }
     if (!password) {
@@ -67,8 +68,29 @@ export default function LoginScreen() {
     }
 
     setErrors(nextErrors);
-    if (Object.keys(nextErrors).length === 0) {
-      const normalizedEmail = email.trim();
+    if (Object.keys(nextErrors).length > 0) {
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:8080/api/usuarios/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: normalizedEmail,
+          senha: password,
+        }),
+      });
+
+      if (!response.ok) {
+        setErrors({
+          password: 'E-mail ou senha inválidos.',
+        });
+        return;
+      }
+
       router.push({
         pathname: '/consentimento',
         params: {
@@ -76,6 +98,10 @@ export default function LoginScreen() {
           age,
           email: normalizedEmail,
         },
+      });
+    } catch {
+      setErrors({
+        password: 'Não foi possível conectar ao servidor.',
       });
     }
   }

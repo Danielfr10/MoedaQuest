@@ -70,7 +70,7 @@ export default function RegisterScreen() {
     return email.trim();
   }
 
-  function handleSubmit() {
+  async function handleSubmit() {
     const nextErrors: RegisterErrors = {};
     const normalizedEmail = email.trim();
     const normalizedConfirmation = confirmEmail.trim();
@@ -97,10 +97,37 @@ export default function RegisterScreen() {
       return;
     }
 
-    router.push({
-      pathname: '/login',
-      params: { name, age, email: normalizedEmail },
-    });
+    try {
+      const response = await fetch('http://localhost:8080/api/usuarios', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          nome: name || undefined,
+          idade: age ? Number(age) : undefined,
+          email: normalizedEmail,
+          senha: password,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorMessage = await response.text();
+        setErrors({
+          email: errorMessage || 'Não foi possível concluir o cadastro.',
+        });
+        return;
+      }
+
+      router.push({
+        pathname: '/login',
+        params: { name, age, email: normalizedEmail },
+      });
+    } catch {
+      setErrors({
+        confirmPassword: 'Não foi possível conectar ao servidor.',
+      });
+    }
   }
 
   return (
